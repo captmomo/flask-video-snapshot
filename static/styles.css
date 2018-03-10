@@ -1,0 +1,44 @@
+
+.square-card.mdl-card {
+    width: 400px;
+    height: 400px;
+ }
+
+.mdl-grid {
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    margin-top: 40px;
+}
+.mdl-card__media{
+    align-items: center
+}
+
+.mdl-card__media > img {
+        max-width: 100%;
+        height: auto;
+        width: auto; /* ie8 */
+}
+.mdl-card__actions {
+    display: flex;
+    box-sizing:border-box;
+    align-items: center;
+}
+.mdl-card__actions > .mdl-button--icon {
+    margin-right: 3px;
+    margin-left: 3px;
+}
+.mdl-button {
+    margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+}
+
+.mdl-cell {
+    padding: 10px;
+}
+
+.mdl-layout {
+    align-items: right;
+    justify-content: center;
+  }
