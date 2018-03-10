@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/styles.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+    <meta charset="utf-8" />
+    <meta content="initial-scale=1, width=device-width" name="viewport" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Sentiments</title>
+
+</head>
+<!--reference: https://www.html5rocks.com/en/tutorials/getusermedia/intro/ -->
+<p>
+    <video id="screenshot-video" class="videostream" autoplay=""></video>
+</p>
+<img id="screenshot-img" src="">
+<img id="processed-img" src="">
+<canvas id='canvas-element' style="display:none;"></canvas>
+<p>
+    <button id="screenshot-button">Take screenshot</button>
+</p>
+<div id='status'></div>
+<script type="text/javascript" charset="utf-8">
+    ///set up video and controls///
+    const button = document.querySelector('#screenshot-button');
+    const img = document.querySelector('#screenshot-img');
+    const video = document.querySelector('#screenshot-video');
+    const processed = document.querySelector('#processed-img');
+
+    const canvas = document.querySelector('#canvas-element');
+
+    var constraints = {
+        video: { width: { exact: 320 }, height: { exact: 240 } }
+    };
+
+    button.onclick = video.onclick = function () {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        // Other browsers will fall back to image/png
+        img.src = canvas.toDataURL('image/png');
+        console.log(canvas.toDataURL('image/png'));
+        let dataURL = canvas.toDataURL('image/jpeg');
+        stream(dataURL);
+    };
+
+    function handleSuccess(stream) {
+        video.srcObject = stream;
+    }
+
+    function handleError() {
+        alert('No camera detected!')
+    }
+    function hasGetUserMedia() {
+        return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+    }
+
+    if (hasGetUserMedia()) {
+        // Good to go!
+        navigator.mediaDevices.getUserMedia(constraints).
+            then(handleSuccess).catch(handleError)
+    } else {
+        alert('getUserMedia() is not supported by your browser');
+    }
+    $(function () {
+        console.log("ready!");
+        hasGetUserMedia();
+    });
+
+    const status = document.querySelector('#status');
+    function stream(img_string) {
+        $.ajax({
+            type: 'POST',
+            url: "{{ url_for('process') }}",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({"img":img_string}),
+            success: function (data) {
+                status.innerHTML = data;
+                console.log(data)
+                processed.src = 'data:image/png;base64,' + data
+            },
+            error: function () {
+                alert('error');
+            }
+        })
+    };
+
+</script>
+
+</html>
