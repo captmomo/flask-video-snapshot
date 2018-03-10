@@ -69,16 +69,16 @@
         return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
     }
 
-    if (hasGetUserMedia()) {
+    
+    $(function () {
+        console.log("ready!");
+        if (hasGetUserMedia()) {
         // Good to go!
         navigator.mediaDevices.getUserMedia(constraints).
             then(handleSuccess).catch(handleError)
     } else {
         alert('getUserMedia() is not supported by your browser');
     }
-    $(function () {
-        console.log("ready!");
-        hasGetUserMedia();
     });
 
     const status = document.querySelector('#status');
