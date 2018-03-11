@@ -1,52 +1,32 @@
 <html>
+
 <body>
-<video autoplay></video>
-<img>
-<input type="range" hidden>
+    <video autoplay></video>
+    <img>
+    <input type="button" value="Start" onclick="start()" id="startBtn">
 <script>
-  var imageCapture;
+ var startBtn = document.getElementById('startBtn');
 
-  navigator.mediaDevices.getUserMedia({video: true})
-    .then(gotMedia)
-    .catch(err => console.error('getUserMedia() failed: ', err));
+ function start() {
+     navigator.mediaDevices.getUserMedia({
+   audio: true,
+   video: true
+     }).then(gotStream).catch(logError);
+     startBtn.disabled = true;
+ }
 
-  function gotMedia(mediastream) {
-    const video = document.querySelector('video');
-    video.srcObject = mediastream;
+ function gotStream(stream) {
+     stream.getTracks().forEach(function (track) {
+   track.onended = function () {
+       startBtn.disabled = stream.active;
+   };
+     });
+ }
 
-    const track = mediastream.getVideoTracks()[0];
-    imageCapture = new ImageCapture(track);
-
-    const capabilities = track.getCapabilities()
-    // Check whether zoom is supported or not.
-    if (!capabilities.zoom) {
-      return;
-    }
-
-    // Map zoom to a slider element.
-    const input = document.querySelector('input[type="range"]');
-    input.min = capabilities.zoom.min;
-    input.max = capabilities.zoom.max;
-    input.step = capabilities.zoom.step;
-    input.value = track.getSettings().zoom;
-
-    input.oninput = function(event) {
-      track.applyConstraints({advanced : [{zoom: event.target.value}] });
-    }
-    input.hidden = false;
-  }
-
-  function takePhoto() {
-    imageCapture.takePhoto()
-      .then(blob => {
-        console.log('Photo taken: ' + blob.type + ', ' + blob.size + 'B');
-
-        const image = document.querySelector('img');
-        image.src = URL.createObjectURL(blob);
-        console.log(URL.createObjectURL(blob))
-      })
-      .catch(err => console.error('takePhoto() failed: ', err));
-  }
+ function logError(error) {
+     log(error.name + ": " + error.message);
+ }
 </script>
 </body>
+
 </html>

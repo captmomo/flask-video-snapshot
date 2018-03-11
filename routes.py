@@ -12,6 +12,10 @@ def index():
 def test():
     return render_template('testpage.html')
 
+@app.route('/test2')
+def test():
+    return render_template('testpage2.html')
+
 @app.route('/process', methods=['POST'])
 def process():
     input = request.json

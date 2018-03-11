@@ -43,3 +43,7 @@
     justify-content: center;
   }
 
+.stream, #basic-stream{
+    width: 320px;
+    height: 240px;
+}

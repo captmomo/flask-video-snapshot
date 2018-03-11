@@ -1,0 +1,37 @@
+<html>
+<h3 id="toc-basic-demo">Basic demo</h3>
+
+<div style="text-align:center;">
+  <video id="basic-stream" class="videostream" autoplay></video>
+  <p><button id="capture-button">Capture video</button> <button id="stop-button">Stop</button></p>
+</div>
+
+<h2 id="toc-screenshot">Taking screenshots</h2>
+<script>
+    function handleError(error) {
+      console.error('navigator.getUserMedia error: ', error);
+    }
+    const constraints = {video: true};
+    
+    (function() {
+      const video = document.querySelector('#basic-stream');
+      const button = document.querySelector('#capture-button');
+      var localMediaStream = null;
+    
+      function handleSuccess(stream) {
+        window.stream = stream; // only to make stream available to console
+        video.srcObject = stream;
+      }
+    
+      button.onclick = function() {
+        navigator.mediaDevices.getUserMedia(constraints).
+          then(handleSuccess).catch(handleError);
+      };
+    
+      document.querySelector('#stop-button').onclick = function() {
+        video.pause();
+        localMediaStream.stop();
+      };
+    })();
+    </script>
+</html>
