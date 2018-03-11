@@ -66,8 +66,9 @@
             video.srcObject = stream;
         };
 
-        function handleError() {
-            alert('No camera detected!')
+        function handleError(error) {
+            console.log(error);
+            alert(error);
         };
         function hasGetUserMedia() {
             return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
