@@ -45,7 +45,10 @@
         const canvas = document.querySelector('#canvas-element');
 
         var constraints = {
-            video: true
+            video: { 
+                facingMode: "user",
+                width: 320,
+                height: 240, }
         };
 
         button.onclick = video.onclick = function () {
@@ -55,8 +58,8 @@
             // Other browsers will fall back to image/png
             img.src = canvas.toDataURL('image/png');
             console.log(canvas.toDataURL('image/png'));
-            let dataURL = canvas.toDataURL('image/jpeg');
-            stream(dataURL);
+            let dataURL = canvas.toDataURL('image/png');
+            stream_image(dataURL);
         };
 
         function handleSuccess(stream) {
@@ -75,7 +78,7 @@
     
 
     const status = document.querySelector('#status');
-    function stream(img_string) {
+    function stream_image(img_string) {
         $.ajax({
             type: 'POST',
             url: "{{ url_for('process') }}",
