@@ -10,7 +10,7 @@ def index():
 
 @app.route('/test')
 def test():
-    return render_template('test.html')
+    return render_template('testpage.html')
 
 @app.route('/process', methods=['POST'])
 def process():
