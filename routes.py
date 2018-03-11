@@ -13,7 +13,7 @@ def test():
     return render_template('testpage.html')
 
 @app.route('/test2')
-def test():
+def test2():
     return render_template('testpage2.html')
 
 @app.route('/process', methods=['POST'])
