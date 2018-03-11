@@ -14,7 +14,7 @@ def test():
 
 @app.route('/test2')
 def test2():
-    return render_template('testpage2.html')
+    return render_template('testpage_2.html')
 
 @app.route('/process', methods=['POST'])
 def process():
