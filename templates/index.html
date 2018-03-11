@@ -6,7 +6,7 @@
             <h2 class="mdl-card__title-text mdl-color-text--light-blue-900">Live Feed</h2>
         </div>
         <div class='mdl-card__media'>
-        <video id="screenshot-video" class="videostream" autoplay=""></video>
+            <video autoplay="true" id="screenshot-video" class="videostream" autoplay=""></video>
         </div>
         <div class="mdl-card__actions mdl-card--border">
             <button class="mdl-button mdl-button--raised mdl-js-button mdl-js-ripple-effect" id="screenshot-button">Take screenshot</button>
@@ -36,50 +36,43 @@
 
 <script type="text/javascript" charset="utf-8">
     ///set up video and controls///
-    const button = document.querySelector('#screenshot-button');
-    const img = document.querySelector('#screenshot-img');
-    const video = document.querySelector('#screenshot-video');
-    const processed = document.querySelector('#processed-img');
+    $(document).ready(function () {
+        const button = document.querySelector('#screenshot-button');
+        const img = document.querySelector('#screenshot-img');
+        const video = document.querySelector('#screenshot-video');
+        const processed = document.querySelector('#processed-img');
 
-    const canvas = document.querySelector('#canvas-element');
+        const canvas = document.querySelector('#canvas-element');
 
-    var constraints = {
-        video: { width: { exact: 320 }, height: { exact: 240 } }
-    };
+        var constraints = {
+            video: true
+        };
 
-    button.onclick = video.onclick = function () {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0);
-        // Other browsers will fall back to image/png
-        img.src = canvas.toDataURL('image/png');
-        console.log(canvas.toDataURL('image/png'));
-        let dataURL = canvas.toDataURL('image/jpeg');
-        stream(dataURL);
-    };
+        button.onclick = video.onclick = function () {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            // Other browsers will fall back to image/png
+            img.src = canvas.toDataURL('image/png');
+            console.log(canvas.toDataURL('image/png'));
+            let dataURL = canvas.toDataURL('image/jpeg');
+            stream(dataURL);
+        };
 
-    function handleSuccess(stream) {
-        video.srcObject = stream;
-    }
+        function handleSuccess(stream) {
+            video.srcObject = stream;
+        };
 
-    function handleError() {
-        alert('No camera detected!')
-    }
-    function hasGetUserMedia() {
-        return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
-    }
-
-    
-    $(function () {
+        function handleError() {
+            alert('No camera detected!')
+        };
+        function hasGetUserMedia() {
+            return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+        };
         console.log("ready!");
-        if (hasGetUserMedia()) {
-        // Good to go!
         navigator.mediaDevices.getUserMedia(constraints).
-            then(handleSuccess).catch(handleError)
-    } else {
-        alert('getUserMedia() is not supported by your browser');
-    }
-    });
+            then(handleSuccess).catch(function(error){console.log(error)});
+    
 
     const status = document.querySelector('#status');
     function stream(img_string) {
@@ -98,5 +91,6 @@
             }
         })
     };
+    });
 
 </script> {% endblock %}

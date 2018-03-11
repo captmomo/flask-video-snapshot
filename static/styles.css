@@ -42,3 +42,8 @@
     align-items: right;
     justify-content: center;
   }
+
+.videoStream, #screenshot, #screenshot-video, #screenshot-img{
+    width: 400px;
+    height:300px;
+}
