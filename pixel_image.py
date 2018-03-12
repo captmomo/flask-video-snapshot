@@ -1,14 +1,24 @@
+import base64
 import operator
 import os
 import re
 from collections import defaultdict
 from functools import reduce
+from io import BytesIO
 from random import choice, randint, shuffle
 
 from nltk import FreqDist
 from PIL import Image, ImageChops, ImageOps
-from io import BytesIO
-import base64
+
+import cv2
+import numpy as np
+
+basedir = os.path.abspath(os.path.dirname(__file__))
+face_xml = os.path.join(basedir,'static','data', 'haarcascade_frontalface_alt.xml')
+eye_xml = os.path.join(basedir,'static','data', 'haarcascade_eye_tree_eyeglasses.xml')
+face_cascade = cv2.CascadeClassifier(face_xml)
+eye_cascade = cv2.CascadeClassifier(eye_xml)
+
 
 #reference: https://stackoverflow.com/questions/31826335/how-to-convert-pil-image-image-object-to-base64-string
 def PIL_image_to_base64(pil_image):
@@ -88,3 +98,39 @@ def generate_pixel_image(image_string):
         print(inst.args)
         output = image_string
     return output
+
+def classify_face(image_string):
+        # convert it to a pil image
+        pil_image = base64_to_PIL_image(image_string)
+        # PIL image -> OpenCV image
+        opencvImage = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGB2BGR)
+       
+        gray = cv2.cvtColor(opencvImage, cv2.COLOR_BGR2GRAY)
+        faces = face_cascade.detectMultiScale(gray,
+                                      scaleFactor=1.1,
+                                      minNeighbors=3,
+                                      minSize=(50, 50),
+                                      flags=cv2.CASCADE_SCALE_IMAGE)
+    
+        font = cv2.FONT_HERSHEY_PLAIN
+        for (x, y, w, h) in faces:
+            cv2.rectangle(opencvImage, (x, y), (x+w, y+h), (255, 0, 0), 2)
+            roi_gray = gray[y:y+h, x:x+w]
+            roi_color = opencvImage[y:y+h, x:x+w]
+            eyes = eye_cascade.detectMultiScale(roi_gray,
+                                        scaleFactor=1.1,
+                                        minNeighbors=3,
+                                        flags=cv2.CASCADE_FIND_BIGGEST_OBJECT)
+                                    
+            if(not len(eyes)):
+                cv2.putText(roi_color, 'Sleeping', (20, 20), font,
+                            1, (255, 255, 255), 2, cv2.LINE_AA)
+            else:
+                cv2.putText(roi_color, 'Awake', (20, 20), font,
+                            1, (255, 255, 255), 2, cv2.LINE_AA)
+            for (ex, ey, ew, eh) in eyes:
+                cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh), (0, 255, 0), 2)
+        byte_string = cv2.imencode('.png', opencvImage)[1]
+        output = base64.b64encode(byte_string)
+
+        return output
