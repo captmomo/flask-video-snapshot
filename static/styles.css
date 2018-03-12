@@ -1,8 +1,14 @@
 
 .square-card.mdl-card {
-    width: 400px;
-    height: 400px;
+    width: 300px;
+    height: 300px;
  }
+
+.rectangle-card.mdl-card{
+    width: 300px;
+    height: 350px;
+    margin-bottom: 10px;
+}
 
 .mdl-grid {
     max-width: 100%;
@@ -11,13 +17,14 @@
     margin-top: 40px;
 }
 .mdl-card__media{
-    align-items: center
+    display: flex;
+    justify-content: center;
 }
 
 .mdl-card__media > img {
-        max-width: 100%;
-        height: auto;
-        width: auto; /* ie8 */
+        max-width: 80%;
+        width: auto;
+        height: auto; /* ie8 */
 }
 .mdl-card__actions {
     display: flex;
@@ -39,7 +46,7 @@
 }
 
 .mdl-layout {
-    align-items: right;
+    align-items: center;
     justify-content: center;
   }
 
