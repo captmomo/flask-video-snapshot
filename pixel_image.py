@@ -108,19 +108,19 @@ def classify_face(image_string):
         gray = cv2.cvtColor(opencvImage, cv2.COLOR_BGR2GRAY)
         faces = face_cascade.detectMultiScale(gray,
                                       scaleFactor=1.1,
-                                      minNeighbors=3,
+                                      minNeighbors=2,
                                       minSize=(50, 50),
                                       flags=cv2.CASCADE_SCALE_IMAGE)
     
-        font = cv2.FONT_HERSHEY_PLAIN
+        font = cv2.FONT_HERSHEY_SIMPLEX
         for (x, y, w, h) in faces:
             cv2.rectangle(opencvImage, (x, y), (x+w, y+h), (255, 0, 0), 2)
             roi_gray = gray[y:y+h, x:x+w]
             roi_color = opencvImage[y:y+h, x:x+w]
             eyes = eye_cascade.detectMultiScale(roi_gray,
                                         scaleFactor=1.1,
-                                        minNeighbors=3,
-                                        flags=cv2.CASCADE_FIND_BIGGEST_OBJECT)
+                                        minNeighbors=2,
+                                        flags=cv2.CASCADE_SCALE_IMAGE)
                                     
             if(not len(eyes)):
                 cv2.putText(roi_color, 'Sleeping', (20, 20), font,
