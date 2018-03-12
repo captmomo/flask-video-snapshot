@@ -36,7 +36,9 @@
 
 <script type="text/javascript" charset="utf-8">
     ///set up video and controls///
-    $(document).ready(function () {
+    $(document).ready(
+        
+        (function () {
         const button = document.querySelector('#screenshot-button');
         const img = document.querySelector('#screenshot-img');
         const video = document.querySelector('#screenshot-video');
@@ -92,6 +94,6 @@
             }
         })
     };
-    });
+    })());
 
 </script> {% endblock %}
