@@ -43,7 +43,7 @@
     justify-content: center;
   }
 
-.stream, #basic-stream{
-    width: 320px;
-    height: 240px;
+.stream, #basic-stream, #screenshot-video, #screenshot-img{
+    width: 90%;
+    height: 90%;
 }
