@@ -119,7 +119,7 @@ def classify_face(image_string):
             roi_color = opencvImage[y:y+h, x:x+w]
             eyes = eye_cascade.detectMultiScale(roi_gray,
                                         scaleFactor=1.1,
-                                        minNeighbors=2,
+                                        minNeighbors=1,
                                         flags=cv2.CASCADE_SCALE_IMAGE)
                                     
             if(not len(eyes)):
