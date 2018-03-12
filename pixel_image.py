@@ -42,16 +42,19 @@ def pixelate_image(img_string):
 
 
 def generate_pixel_image(image_string):
+    '''
+    https://stackoverflow.com/questions/30520666/pixelate-image-with-pillow
+
+    '''
     block_size = 16
     size = (block_size, block_size)
     image = base64_to_PIL_image(image_string)
     im = image.convert('RGB')
     img_data = list(im.getdata())
-    length = len(list(im.getdata()))
     freq_dist = FreqDist(set(img_data))
-    top_ten_colours = freq_dist.most_common(256)
+    most_common = freq_dist.most_common(256)
     palette = []
-    for colour in top_ten_colours:
+    for colour in most_common:
         palette.append(colour[0])
     while len(palette) < 256:
         palette.append((0, 0, 0))
@@ -85,7 +88,3 @@ def generate_pixel_image(image_string):
         print(inst.args)
         output = image_string
     return output
-
-
-
-
