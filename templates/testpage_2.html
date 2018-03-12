@@ -11,7 +11,7 @@
     function handleError(error) {
       console.error('navigator.getUserMedia error: ', error);
     }
-    const constraints = {video: true};
+    const constraints = {video: {width : 340, height: 240, facingmode: 'user'}};
     
     (function() {
       const video = document.querySelector('#basic-stream');

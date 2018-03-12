@@ -10,7 +10,10 @@
  function start() {
      navigator.mediaDevices.getUserMedia({
    audio: true,
-   video: true
+   video: { 
+                facingMode: "user",
+                width: 320,
+                height: 240, }
      }).then(gotStream).catch(logError);
      startBtn.disabled = true;
  }
