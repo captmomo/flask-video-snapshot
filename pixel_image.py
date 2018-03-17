@@ -30,6 +30,34 @@ def PIL_image_to_base64(pil_image):
 def base64_to_PIL_image(base64_img):
     return Image.open(BytesIO(base64.b64decode(base64_img)))
 
+def atkinson_dither(image_string):
+    image = base64_to_PIL_image(image_string)
+    image = image.convert('L')
+    pix = image.load()
+    w, h = image.size
+    for y in range(h):
+        for x in range(w):
+            old = pix[x, y]
+            new = 0 if old < 127 else 255
+            pix[x, y] = new
+            quant_error = old - new
+            if x < w - 1:
+                pix[x + 1, y] += quant_error * 1 // 8
+            if x < w - 2:
+                pix[x + 2, y] += quant_error * 1 // 8
+            if x > 0 and y < h - 1:
+                pix[x - 1, y + 1] += quant_error * 1 // 8
+            if y < h - 1:
+                pix[x, y + 1] += quant_error * 1 // 8
+            if y < h - 2:
+                pix[x, y + 2] += quant_error * 1 // 8
+            if x < w - 1 and y < h - 1:
+                pix[x + 1, y + 1] += quant_error * 1 // 8
+
+    if w > 1024 or h > 512:
+        image = ImageOps.scale(image, 0.75)
+    return PIL_image_to_base64(image)
+
 def pixelate_image(img_string):
     image = base64_to_PIL_image(img_string)
     img_data = list(image.getdata())
@@ -119,7 +147,7 @@ def classify_face(image_string):
             roi_color = opencvImage[y:y+h, x:x+w]
             eyes = eye_cascade.detectMultiScale(roi_gray,
                                         scaleFactor=1.1,
-                                        minNeighbors=1,
+                                        minNeighbors=2,
                                         flags=cv2.CASCADE_SCALE_IMAGE)
                                     
             if(not len(eyes)):

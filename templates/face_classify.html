@@ -93,8 +93,9 @@
                 console.log(data)
                 processed.src = 'data:image/png;base64,' + data
             },
-            error: function () {
-                alert('error');
+            error: function (error) {
+                alert(error);
+                console.log(error)
             }
         })
     };
